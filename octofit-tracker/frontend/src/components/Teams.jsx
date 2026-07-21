@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
-import { buildApiUrl, fetchCollection } from './api.js'
+import { extractItems, getCodespaceNameFromHostname } from './api.js'
 
-const endpoint = buildApiUrl('teams')
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME || getCodespaceNameFromHostname()
+const endpoint = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/teams/`
+  : 'http://localhost:8000/api/teams/'
 
 function Teams() {
   const [teams, setTeams] = useState([])
@@ -11,9 +14,17 @@ function Teams() {
   useEffect(() => {
     let isMounted = true
 
-    fetchCollection('teams')
-      .then((items) => {
+    fetch(endpoint)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`)
+        }
+
+        return response.json()
+      })
+      .then((payload) => {
         if (!isMounted) return
+        const items = extractItems(payload, 'teams')
         setTeams(items)
         setStatus('ready')
       })

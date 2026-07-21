@@ -1,4 +1,14 @@
-const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+export function getCodespaceNameFromHostname() {
+  if (typeof window === 'undefined') {
+    return ''
+  }
+
+  return window.location.hostname.endsWith('-5173.app.github.dev')
+    ? window.location.hostname.replace('-5173.app.github.dev', '')
+    : ''
+}
+
+export const codespaceName = import.meta.env.VITE_CODESPACE_NAME || getCodespaceNameFromHostname()
 const fallbackApiBaseUrl = 'http://localhost:8000/api'
 const codespaceApiBaseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev/api`

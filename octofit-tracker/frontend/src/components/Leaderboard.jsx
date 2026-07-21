@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
-import { buildApiUrl, fetchCollection } from './api.js'
+import { extractItems, getCodespaceNameFromHostname } from './api.js'
 
-const endpoint = buildApiUrl('leaderboard')
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME || getCodespaceNameFromHostname()
+const endpoint = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
+  : 'http://localhost:8000/api/leaderboard/'
 
 function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([])
@@ -11,9 +14,17 @@ function Leaderboard() {
   useEffect(() => {
     let isMounted = true
 
-    fetchCollection('leaderboard')
-      .then((items) => {
+    fetch(endpoint)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`)
+        }
+
+        return response.json()
+      })
+      .then((payload) => {
         if (!isMounted) return
+        const items = extractItems(payload, 'leaderboard')
         setLeaderboard(items)
         setStatus('ready')
       })
