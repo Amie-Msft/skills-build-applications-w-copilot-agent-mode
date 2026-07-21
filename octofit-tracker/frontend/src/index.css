@@ -1,0 +1,43 @@
+:root {
+  --sans: Avenir Next, Trebuchet MS, Verdana, sans-serif;
+  --heading: Georgia, Times New Roman, serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  color: #243530;
+  background: #f7f4ec;
+  font: 18px/145% var(--sans);
+  font-synthesis: none;
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+p {
+  margin: 0;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 135%;
+}
+
+* {
+  box-sizing: border-box;
+}
